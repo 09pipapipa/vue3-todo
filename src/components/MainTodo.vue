@@ -2,9 +2,16 @@
 import { ref } from 'vue'
 
 const todo = ref('')
+const todoList = ref<{ id: number; task: string }[]>([])
 
 const addTodo = () => {
-  localStorage.todoList = todo.value
+  const id = new Date().getTime()
+
+  todoList.value.push({ id: id, task: todo.value })
+
+  localStorage.todoList = JSON.stringify(todoList.value)
+
+  todo.value = ''
 }
 </script>
 
