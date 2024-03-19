@@ -8,14 +8,17 @@ const isEdit = ref(false)
 const { todoList, add, show, edit, del } = useTodoList()
 
 const addTodo = () => {
-  if (!todo.value) return
-  add(todo.value)
-  todo.value = ''
+  if (!todo.value) return //(!todo.value)が空かチェック、空ならtrue,逆ならfalseでユーザーが入力ないときは関数から抜ける。
+  add(todo.value) //空でない、ユーザーが何か入力している時todo.valueの値を取る
+  todo.value = '' //空の配列を設定することでタスクを入力するたびクリアされる。
 }
 
 //編集ボタン機能
+//↓IDパラメーターを受け取り関数showTodoに渡す
 const showTodo = (id: number) => {
+  //↓押された編集ボタンのidを取得してtodo.valueに代入
   todo.value = show(id)
+  //todo.valueの値があればisEditの値(value)をtrueに設定して編集モードがon
   if (todo.value) {
     isEdit.value = true
   }
@@ -25,6 +28,7 @@ const showTodo = (id: number) => {
 const editTodo = () => {
   if (!todo.value) return
   edit(todo.value)
+  //↓falseにするのは編集モードを終了するかどうかtrueにしておくと編集モードが終わらず変更ボタン→追加に戻らない。
   isEdit.value = false
   todo.value = ''
 }
