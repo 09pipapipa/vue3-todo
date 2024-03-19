@@ -60,6 +60,23 @@ const editTodo = () => {
     todo.value = ''
   }
 }
+//削除ボタン機能
+const deleteTodo = (id: number) => {
+  isEdit.value = false
+  editId = -1
+  todo.value = ''
+
+  const findTodo = todoList.value.find((todo) => todo.id === id)
+  const idx = todoList.value.findIndex((todo) => todo.id === id)
+
+  if (findTodo) {
+    const delMsg = '「 ' + findTodo.task + '」 を削除しますか?'
+    if (!confirm(delMsg)) return
+
+    todoList.value.splice(idx, 1)
+    localStorage.todoList = JSON.stringify(todoList.value)
+  }
+}
 </script>
 
 <template>
@@ -76,7 +93,7 @@ const editTodo = () => {
       </div>
       <div class="btns">
         <button class="btn green" @click="showTodo(todo.id)">編</button>
-        <button class="btn pink">削</button>
+        <button class="btn pink" @click="deleteTodo(todo.id)">削</button>
       </div>
     </div>
   </div>
