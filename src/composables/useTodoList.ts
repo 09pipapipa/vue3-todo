@@ -1,8 +1,8 @@
 import { ref } from 'vue'
 
 //exportで外部から使えるようにする
-export const useTodoList = (id: number) => {
-  const todoList = ref<{ id: Number; task: string; checked: boolean }[]>([])
+export const useTodoList = () => {
+  const todoList = ref<{ id: number; task: string; checked: boolean }[]>([])
   const ls = localStorage.todoList
 
   //ローカルストレージにtodoListが存在していればparseし、
@@ -60,5 +60,16 @@ export const useTodoList = (id: number) => {
       localStorage.todoList = JSON.stringify(todoList.value)
     }
   }
-  return { todoList, add, show, edit, del }
+
+  //チェックボックス
+  const check = (id: number) => {
+    const todo = findById(id)
+    const idx = findIndexById(id)
+    if (todo) {
+      todo.checked = !todo.checked
+      todoList.value.splice(idx, 1, todo)
+      localStorage.todoList = JSON.stringify(todoList.value)
+    }
+  }
+  return { todoList, add, show, edit, del, check }
 }
