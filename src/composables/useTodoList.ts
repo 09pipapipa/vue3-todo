@@ -2,7 +2,7 @@ import { ref } from 'vue'
 
 //exportで外部から使えるようにする
 export const useTodoList = (id: number) => {
-  const todoList = ref<{ id: Number; task: string }[]>([])
+  const todoList = ref<{ id: Number; task: string; checked: boolean }[]>([])
   const ls = localStorage.todoList
 
   //ローカルストレージにtodoListが存在していればparseし、
@@ -22,7 +22,7 @@ export const useTodoList = (id: number) => {
 
   const add = (task: string) => {
     const id = new Date().getTime() //Idを簡易的にミリ秒で登録
-    todoList.value.push({ id: id, task: task }) //配列に入力TODOを格納
+    todoList.value.push({ id: id, task: task, checked: false }) //配列に入力TODOを格納
     localStorage.todoList = JSON.stringify(todoList.value) //ローカルストレージに登録
   }
 
