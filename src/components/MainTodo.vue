@@ -70,7 +70,9 @@ const deleteTodo = (id: number) => {
   const idx = todoList.value.findIndex((todo) => todo.id === id)
 
   if (findTodo) {
+    //delMsgという関数を定義しfindTodo.taskで要素を取り出し表示
     const delMsg = '「 ' + findTodo.task + '」 を削除しますか?'
+    //confirmはok=true,キャンセル=falseでキャンセルを押すとループから抜ける
     if (!confirm(delMsg)) return
 
     todoList.value.splice(idx, 1)
