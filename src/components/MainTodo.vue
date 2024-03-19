@@ -1,83 +1,41 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-//todoを繰り返し表示する
-const todo = ref('')
-const todoList = ref<{ id: number; task: string }[]>([])
+import { useTodoList } from '@/composables/useTodoList'
 
-const ls = localStorage.todoList
-todoList.value = ls ? JSON.parse(ls) : []
-
-//Todoを登録する
-const addTodo = () => {
-  //IDをミリ秒で登録する
-  const id = new Date().getTime()
-  //配列に入力TODOを格納
-  todoList.value.push({ id: id, task: todo.value })
-  //ローカルストレージに登録
-  localStorage.todoList = JSON.stringify(todoList.value)
-  //登録後は入力欄を空にする
-  todo.value = ''
-}
-
-//編集ボタンを押すと入力欄にtodoを表示
-//編集ボタンを押したときにtrueにする
+const todo = ref<string | undefined>()
 const isEdit = ref(false)
-let editId = -1
+const { todoList, add, show, edit, del } = useTodoList()
 
-const showTodo = (id: number) => {
-  //TdoリストからIDに一致するTodoを取得
-  const findTodo = todoList.value.find((todo) => todo.id === id)
-  //取得した要素からtaskを取り出し入力欄へ
-  if (findTodo) {
-    todo.value = findTodo.task
-    isEdit.value = true
-    editId = id
-  }
-  const editTodo = () => {}
+const addTodo = () => {
+  if (!todo.value) return //(!todo.value)が空かチェック、空ならtrue,逆ならfalseでユーザーが入力ないときは関数から抜ける。
+  add(todo.value) //空でない、ユーザーが何か入力している時todo.valueの値を取る
+  todo.value = '' //空の配列を設定することでタスクを入力するたびクリアされる。
 }
 
-//editTodoの処理を追加
-const editTodo = () => {
-  //TodoリストからIDに一致するTodoを取得
-  const findTodo = todoList.value.find((todo) => todo.id === editId)
-
-  //TodoリストからIdに一致するインデックスを取得
-  const idx = todoList.value.findIndex((todo) => todo.id === editId)
-
-  // taskを編集後のTodoで置き換え
-  if (findTodo) {
-    findTodo.task = todo.value
-
-    //splice関数でインデックスをもとに対象オブジェクトを置き換え
-    todoList.value.splice(idx, 1, findTodo)
-    //localStorageに保存
-    localStorage.todoList = JSON.stringify(todoList.value)
-
-    //初期値に戻す
-    isEdit.value = false
-    editId = -1
-    todo.value = ''
+//編集ボタン機能
+//↓IDパラメーターを受け取り関数showTodoに渡す
+const showTodo = (id: number) => {
+  //↓押された編集ボタンのidを取得してtodo.valueに代入
+  todo.value = show(id)
+  //todo.valueの値があればisEditの値(value)をtrueに設定して編集モードがon
+  if (todo.value) {
+    isEdit.value = true
   }
+}
+
+//変更ボタン機能
+const editTodo = () => {
+  if (!todo.value) return
+  edit(todo.value)
+  //↓falseにするのは編集モードを終了するかどうかtrueにしておくと編集モードが終わらず変更ボタン→追加に戻らない。
+  isEdit.value = false
+  todo.value = ''
 }
 //削除ボタン機能
 const deleteTodo = (id: number) => {
   isEdit.value = false
-  editId = -1
-  todo.value = ''
-
-  const findTodo = todoList.value.find((todo) => todo.id === id)
-  const idx = todoList.value.findIndex((todo) => todo.id === id)
-
-  if (findTodo) {
-    //delMsgという関数を定義しfindTodo.taskで要素を取り出し表示
-    const delMsg = '「 ' + findTodo.task + '」 を削除しますか?'
-    //confirmはok=true,キャンセル=falseでキャンセルを押すとループから抜ける
-    if (!confirm(delMsg)) return
-
-    todoList.value.splice(idx, 1)
-    localStorage.todoList = JSON.stringify(todoList.value)
-  }
+  del(id)
 }
 </script>
 
