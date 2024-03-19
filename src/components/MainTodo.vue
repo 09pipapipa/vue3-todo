@@ -16,6 +16,14 @@ const addTodo = () => {
 
   todo.value = ''
 }
+
+const showTodo = (id: number) => {
+  const findTodo = todoList.value.find((todo) => todo.id === id)
+
+  if (findTodo) {
+    todo.value = findTodo.task
+  }
+}
 </script>
 
 <template>
@@ -30,7 +38,7 @@ const addTodo = () => {
         <label>{{ todo.task }}</label>
       </div>
       <div class="btns">
-        <button class="btn green">編</button>
+        <button class="btn green" @click="showTodo(todo.id)">編</button>
         <button class="btn pink">削</button>
       </div>
     </div>
