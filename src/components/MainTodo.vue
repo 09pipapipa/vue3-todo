@@ -1,83 +1,37 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-//todoを繰り返し表示する
-const todo = ref('')
-const todoList = ref<{ id: number; task: string }[]>([])
+import { useTodoList } from '@/composables/useTodoList'
 
-const ls = localStorage.todoList
-todoList.value = ls ? JSON.parse(ls) : []
+const todo = ref<string | undefined>()
+const isEdit = ref(false)
+const { todoList, add, show, edit, del } = useTodoList()
 
-//Todoを登録する
 const addTodo = () => {
-  //IDをミリ秒で登録する
-  const id = new Date().getTime()
-  //配列に入力TODOを格納
-  todoList.value.push({ id: id, task: todo.value })
-  //ローカルストレージに登録
-  localStorage.todoList = JSON.stringify(todoList.value)
-  //登録後は入力欄を空にする
+  if (!todo.value) return
+  add(todo.value)
   todo.value = ''
 }
 
-//編集ボタンを押すと入力欄にtodoを表示
-//編集ボタンを押したときにtrueにする
-const isEdit = ref(false)
-let editId = -1
-
+//編集ボタン機能
 const showTodo = (id: number) => {
-  //TdoリストからIDに一致するTodoを取得
-  const findTodo = todoList.value.find((todo) => todo.id === id)
-  //取得した要素からtaskを取り出し入力欄へ
-  if (findTodo) {
-    todo.value = findTodo.task
+  todo.value = show(id)
+  if (todo.value) {
     isEdit.value = true
-    editId = id
   }
-  const editTodo = () => {}
 }
 
-//editTodoの処理を追加
+//変更ボタン機能
 const editTodo = () => {
-  //TodoリストからIDに一致するTodoを取得
-  const findTodo = todoList.value.find((todo) => todo.id === editId)
-
-  //TodoリストからIdに一致するインデックスを取得
-  const idx = todoList.value.findIndex((todo) => todo.id === editId)
-
-  // taskを編集後のTodoで置き換え
-  if (findTodo) {
-    findTodo.task = todo.value
-
-    //splice関数でインデックスをもとに対象オブジェクトを置き換え
-    todoList.value.splice(idx, 1, findTodo)
-    //localStorageに保存
-    localStorage.todoList = JSON.stringify(todoList.value)
-
-    //初期値に戻す
-    isEdit.value = false
-    editId = -1
-    todo.value = ''
-  }
+  if (!todo.value) return
+  edit(todo.value)
+  isEdit.value = false
+  todo.value = ''
 }
 //削除ボタン機能
 const deleteTodo = (id: number) => {
   isEdit.value = false
-  editId = -1
-  todo.value = ''
-
-  const findTodo = todoList.value.find((todo) => todo.id === id)
-  const idx = todoList.value.findIndex((todo) => todo.id === id)
-
-  if (findTodo) {
-    //delMsgという関数を定義しfindTodo.taskで要素を取り出し表示
-    const delMsg = '「 ' + findTodo.task + '」 を削除しますか?'
-    //confirmはok=true,キャンセル=falseでキャンセルを押すとループから抜ける
-    if (!confirm(delMsg)) return
-
-    todoList.value.splice(idx, 1)
-    localStorage.todoList = JSON.stringify(todoList.value)
-  }
+  del(id)
 }
 </script>
 
