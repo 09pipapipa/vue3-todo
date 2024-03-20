@@ -1,8 +1,8 @@
 import { ref } from 'vue'
 
 //exportで外部から使えるようにする
-export const useTodoList = (id: number) => {
-  const todoList = ref<{ id: Number; task: string }[]>([])
+export const useTodoList = () => {
+  const todoList = ref<{ id: number; task: string; checked: boolean }[]>([])
   const ls = localStorage.todoList
 
   //ローカルストレージにtodoListが存在していればparseし、
@@ -22,7 +22,7 @@ export const useTodoList = (id: number) => {
 
   const add = (task: string) => {
     const id = new Date().getTime() //Idを簡易的にミリ秒で登録
-    todoList.value.push({ id: id, task: task }) //配列に入力TODOを格納
+    todoList.value.push({ id: id, task: task, checked: false }) //配列に入力TODOを格納
     localStorage.todoList = JSON.stringify(todoList.value) //ローカルストレージに登録
   }
 
@@ -60,5 +60,18 @@ export const useTodoList = (id: number) => {
       localStorage.todoList = JSON.stringify(todoList.value)
     }
   }
-  return { todoList, add, show, edit, del }
+
+  //チェックボックス
+  const check = (id: number) => {
+    //↓引数で受け取ったidに対応するtodoを関数を使い取得
+    const todo = findById(id)
+    const idx = findIndexById(id)
+    if (todo) {
+      todo.checked = !todo.checked
+      //↓チェック状態を更新するidxを1削除してtodo挿入
+      todoList.value.splice(idx, 1, todo)
+      localStorage.todoList = JSON.stringify(todoList.value)
+    }
+  }
+  return { todoList, add, show, edit, del, check }
 }
