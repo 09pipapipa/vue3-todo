@@ -69,7 +69,7 @@ const changeCheck = (id: number) => {
   </div>
   <div class="finCount">
     <span>完了:{{ countFin }}、</span>
-    <span>未完了:,</span>
+    <span>未完了:{{ todoList.length - countFin }}</span>
   </div>
 </template>
 

@@ -80,5 +80,12 @@ export const useTodoList = () => {
     return finArr.length
   })
 
+  //チェック未完了数カウント
+  const countFinMethod = () => {
+    // チェックされたTODOの数をカウントする
+    const finArr = todoList.value.filter((todo) => todo.checked)
+    return finArr.length
+  }
+
   return { todoList, add, show, edit, del, check, countFin }
 }
