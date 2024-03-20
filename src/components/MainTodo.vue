@@ -5,7 +5,7 @@ import { useTodoList } from '@/composables/useTodoList'
 
 const todo = ref<string | undefined>()
 const isEdit = ref(false)
-const { todoList, add, show, edit, del, check } = useTodoList()
+const { todoList, add, show, edit, del, check, countFin } = useTodoList()
 
 const addTodo = () => {
   if (!todo.value) return //(!todo.value)が空かチェック、空ならtrue,逆ならfalseでユーザーが入力ないときは関数から抜ける。
@@ -66,6 +66,10 @@ const changeCheck = (id: number) => {
         <button class="btn pink" @click="deleteTodo(todo.id)">削</button>
       </div>
     </div>
+  </div>
+  <div class="finCount">
+    <span>完了:{{ countFin }}、</span>
+    <span>未完了:,</span>
   </div>
 </template>
 
@@ -130,5 +134,9 @@ const changeCheck = (id: number) => {
   color: #777;
   text-decoration: line-through;
   background-color: #ddd;
+}
+.finCount {
+  margin-top: 8px;
+  font-size: 0.8em;
 }
 </style>
