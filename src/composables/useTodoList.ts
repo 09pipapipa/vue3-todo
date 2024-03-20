@@ -63,10 +63,12 @@ export const useTodoList = () => {
 
   //チェックボックス
   const check = (id: number) => {
+    //↓引数で受け取ったidに対応するtodoを関数を使い取得
     const todo = findById(id)
     const idx = findIndexById(id)
     if (todo) {
       todo.checked = !todo.checked
+      //↓チェック状態を更新するidxを1削除してtodo挿入
       todoList.value.splice(idx, 1, todo)
       localStorage.todoList = JSON.stringify(todoList.value)
     }
