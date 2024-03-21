@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 //exportで外部から使えるようにする
 export const useTodoList = () => {
@@ -73,5 +73,19 @@ export const useTodoList = () => {
       localStorage.todoList = JSON.stringify(todoList.value)
     }
   }
-  return { todoList, add, show, edit, del, check }
+
+  //チェック完了数カウント
+  const countFin = computed(() => {
+    const finArr = todoList.value.filter((todo: Todo) => todo.checked)
+    return finArr.length
+  })
+
+  //チェック未完了数カウント
+  const countFinMethod = () => {
+    // チェックされたTODOの数をカウントする
+    const finArr = todoList.value.filter((todo) => todo.checked)
+    return finArr.length
+  }
+
+  return { todoList, add, show, edit, del, check, countFin }
 }
