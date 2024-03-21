@@ -50,11 +50,9 @@ const changeCheck = (id: number) => {
 
 <template>
   <div>
-    <Buttonedit @edit-click="editTodo" v-if />
-    <ButtonAdd @add-click="addTodo" v-else />
     <input type="text" class="todo_input" v-model="todo" placeholder="+ TODOを入力" />
-    <BaseButton class="green" @click="editTodo" v-show="isEdit">変更</BaseButton>
-    <BaseButton class="btn" @click="addTodo" v-show="!isEdit">追加</BaseButton>
+    <ButtonEdit @edit-click="editTodo" v-if="isEdit" />
+    <ButtonAdd @add-click="addTodo" v-else />
   </div>
   <div class="box_list">
     <div class="todo_list" v-for="todo in todoList" :key="todo.id">
@@ -68,8 +66,8 @@ const changeCheck = (id: number) => {
         <label>{{ todo.task }}</label>
       </div>
       <div class="btns">
-        <BaseButton class="green" @click="showTodo(todo.id)">編</BaseButton>
-        <BaseButton class="pink" @click="deleteTodo(todo.id)">削</BaseButton>
+        <ButtonShow @show-click="showTodo(todo.id)" />
+        <ButtonDel @del-click="deleteTodo(todo.id)" />
       </div>
     </div>
   </div>

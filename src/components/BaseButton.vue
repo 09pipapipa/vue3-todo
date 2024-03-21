@@ -1,6 +1,6 @@
 <script setup lang="ts">
 type Props = {
-  color: string
+  color: 'blue' | 'green' | 'pink'
 }
 
 type Emits = {
