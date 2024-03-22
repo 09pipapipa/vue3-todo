@@ -1,8 +1,16 @@
-import { createRouter, createWebHistory} form 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router'
+
+import MainTodo from '@/views/MainTodo.vue'
 
 const router = createRouter({
-  history = createWebHistory(),
-  routes:[]
-});
+  history: createWebHistory(),
+  routes: [
+    {
+      path: '/',
+      name: 'mainTodo',
+      component: MainTodo
+    }
+  ]
+})
 
-export default router;
+export default router
