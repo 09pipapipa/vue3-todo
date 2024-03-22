@@ -1,6 +1,12 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import TheHeader from '@/components/TheHeader.vue'
 import TheFooter from '@/components/TheFooter.vue'
+
+const router = useRouter()
+const goBlog = () => {
+  router.push('/blog')
+}
 </script>
 
 <template>
@@ -8,7 +14,7 @@ import TheFooter from '@/components/TheFooter.vue'
     <TheHeader />
     <nav>
       <router-link to="/">Todo</router-link>
-      <router-link to="/about">About</router-link>
+      | <router-link to="/about">About</router-link> | <span @click="goBlog">Blog</span>
     </nav>
     <main class="main"><router-view /></main>
     <TheFooter />
