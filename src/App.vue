@@ -6,6 +6,10 @@ import TheFooter from '@/components/TheFooter.vue'
 <template>
   <div class="wrap">
     <TheHeader />
+    <nav>
+      <router-link to="/">Todo</router-link>
+      <router-link to="/about">About</router-link>
+    </nav>
     <main class="main"><router-view /></main>
     <TheFooter />
   </div>
